@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Referencia rápida de JavaScript — freeCodeCamp. Búsqueda instantánea y asistente con IA." />
+<meta name="theme-color" content="#0a0e14" />
+<title>JS Ref · Apuntes de JavaScript</title>
+
+<!-- highlight.js para resaltado de sintaxis -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/base16/material-darker.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+<!-- Tipografía -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;450;500;600&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ░░ BARRA SUPERIOR ░░ -->
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">{ }</span>
+    <div class="brand-text">
+      <span class="brand-name">JS&nbsp;Ref</span>
+      <span class="brand-sub">Apuntes · freeCodeCamp</span>
+    </div>
+  </div>
+
+  <button class="search-trigger" id="searchTrigger" aria-label="Buscar (Ctrl K)">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+    <span>Buscar en 73 secciones…</span>
+    <kbd>⌘K</kbd>
+  </button>
+
+  <button class="menu-toggle" id="menuToggle" aria-label="Menú">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+  </button>
+</header>
+
+<div class="layout">
+  <!-- ░░ RAIL IZQUIERDO — SYLLABUS ░░ -->
+  <aside class="rail" id="rail">
+    <div class="rail-head">
+      <span class="rail-eyebrow">El recorrido</span>
+      <p class="rail-note">7 bloques · desde febrero 2026</p>
+    </div>
+    <nav class="syllabus" id="syllabus"><!-- generado por JS --></nav>
+    <div class="rail-foot">
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <span id="progressLabel">73 secciones documentadas</span>
+    </div>
+  </aside>
+  <div class="rail-scrim" id="railScrim"></div>
+
+  <!-- ░░ CONTENIDO ░░ -->
+  <main class="content" id="content"><!-- generado por JS --></main>
+</div>
+
+<!-- ░░ PALETA DE BÚSQUEDA ░░ -->
+<div class="palette-overlay" id="paletteOverlay" hidden>
+  <div class="palette" role="dialog" aria-modal="true" aria-label="Buscar">
+    <div class="palette-input-row">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="paletteInput" type="text" placeholder="Busca por título, concepto o código…" autocomplete="off" spellcheck="false" />
+      <kbd class="palette-esc">esc</kbd>
+    </div>
+    <div class="palette-results" id="paletteResults"></div>
+    <div class="palette-foot">
+      <span><kbd>↑</kbd><kbd>↓</kbd> navegar</span>
+      <span><kbd>↵</kbd> abrir</span>
+      <span id="paletteCount"></span>
+    </div>
+  </div>
+</div>
+
+<!-- ░░ ASISTENTE GEMINI ░░ -->
+<button class="ask-fab" id="askFab" aria-label="Preguntar al asistente">
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+  <span class="ask-fab-label">Preguntar</span>
+</button>
+
+<div class="assistant" id="assistant" hidden>
+  <div class="assistant-head">
+    <div class="assistant-id">
+      <span class="assistant-dot"></span>
+      <div>
+        <strong>Asistente IA</strong>
+        <span class="assistant-ctx" id="assistantCtx">Contexto general</span>
+      </div>
+    </div>
+    <button class="assistant-close" id="assistantClose" aria-label="Cerrar">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="assistant-log" id="assistantLog"></div>
+  <form class="assistant-form" id="assistantForm">
+    <textarea id="assistantInput" rows="1" placeholder="Pregunta una duda rápida…" spellcheck="false"></textarea>
+    <button type="submit" id="assistantSend" aria-label="Enviar">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+    </button>
+  </form>
+</div>
+<div class="assistant-scrim" id="assistantScrim" hidden></div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
