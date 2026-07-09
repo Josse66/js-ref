@@ -1,15 +1,15 @@
 # JS Ref — Apuntes de JavaScript
 
-Referencia rápida e interactiva de mis apuntes de JavaScript del curso **Algoritmos y Estructuras de Datos** de freeCodeCamp. Búsqueda instantánea sobre las 73 secciones, navegación por bloques y un asistente con IA (Gemini) que conoce la sección que estás leyendo.
+Referencia rápida e interactiva de mis apuntes de JavaScript del curso **Algoritmos y Estructuras de Datos** de freeCodeCamp. Búsqueda instantánea sobre las 86 secciones, navegación por bloques y un asistente con IA (Gemini) que conoce la sección que estás leyendo.
 
-**73 secciones · 7 bloques · 96 ejemplos de código**
+**86 secciones · 8 bloques · 104 ejemplos de código**
 
 ---
 
 ## Qué incluye
 
 - **Búsqueda global instantánea** (`⌘K` / `Ctrl+K` o tecla `/`) — busca en títulos, explicaciones y código, con resaltado de coincidencias y navegación por teclado.
-- **Recorrido por bloques** — barra lateral tipo línea de tiempo con los 7 bloques del curso, cada uno con su color.
+- **Recorrido por bloques** — barra lateral tipo línea de tiempo con los 8 bloques del curso, cada uno con su color.
 - **Resaltado de sintaxis** con highlight.js y botón de copiar en cada bloque de código.
 - **Asistente IA con contexto** — el chat sabe qué sección estás viendo y responde dudas rápidas usando Gemini. La API key vive solo en el servidor, nunca en el navegador.
 - **Responsive** — funciona en móvil y escritorio.
@@ -23,7 +23,7 @@ Referencia rápida e interactiva de mis apuntes de JavaScript del curso **Algori
 ├── index.html        → la app (estructura)
 ├── styles.css        → diseño (tema oscuro, acento ámbar)
 ├── app.js            → toda la lógica: búsqueda, navegación, chat
-├── data.js           → el contenido de los apuntes (73 secciones)
+├── data.js           → el contenido de los apuntes (86 secciones)
 ├── api/
 │   └── gemini.js     → función serverless de Vercel (llama a Gemini)
 ├── vercel.json       → configuración de despliegue
@@ -66,6 +66,18 @@ git push -u origin main
 
 > Cada vez que hagas `git push`, Vercel actualiza la app automáticamente.
 
+### Ya lo tienes desplegado — ¿cómo subo cambios nuevos?
+
+Si el sitio ya está en Vercel (por ejemplo, después de agregar un bloque nuevo o corregir contenido), no vuelvas a hacer todo el proceso de arriba. Solo reemplaza los archivos que cambiaron en tu carpeta local y sube el cambio:
+
+```bash
+git add .
+git commit -m "Agrega bloque de Programación Funcional"
+git push
+```
+
+Vercel detecta el `push` y despliega la nueva versión sola, en menos de un minuto. No hace falta tocar nada en el panel de Vercel ni volver a poner la `GEMINI_API_KEY` — esa ya quedó guardada desde el primer deploy.
+
 ### Rotación de keys (opcional)
 
 Si la app recibe tráfico y una key se satura, puedes agregar más y el servidor las prueba en orden:
@@ -92,16 +104,16 @@ Crea un archivo `.env` (copia `.env.example`) con tu `GEMINI_API_KEY`.
 
 ## Cómo agregar un bloque nuevo
 
-El proyecto está pensado para crecer con los próximos temas del curso (Programación Funcional, Algoritmos Intermedios, etc.) **sin tocar el código de la app**. Solo se edita `data.js`:
+El proyecto está pensado para crecer con los próximos temas del curso (Algoritmos Intermedios, DOM, Fetch/APIs, etc.) **sin tocar el código de la app**. Solo se edita `data.js`:
 
 ### 1. Agrega el bloque al arreglo `bloques`
 
 ```js
 {
-  id: 'funcional',
-  titulo: 'Programación Funcional',
-  desc: 'Funciones puras, map, filter, reduce',
-  rango: [74, 85]
+  id: 'dom',
+  titulo: 'DOM',
+  desc: 'Manipular elementos de una página web',
+  rango: [87, 95]
 }
 ```
 
@@ -111,22 +123,24 @@ Cada sección sigue esta forma:
 
 ```js
 {
-  numero: 74,
-  titulo: 'Funciones Puras',
-  bloque: 'funcional',
+  numero: 87,
+  titulo: 'querySelector() y querySelectorAll()',
+  bloque: 'dom',
   contenido: [
-    { tipo: 'texto', texto: 'Una función pura **siempre** devuelve lo mismo...' },
+    { tipo: 'texto', texto: 'querySelector() **devuelve el primer** elemento que coincide con el selector...' },
     { tipo: 'subtitulo', texto: 'Ejemplo' },
-    { tipo: 'codigo', codigo: 'const sumar = (a, b) => a + b;' },
+    { tipo: 'codigo', codigo: 'const boton = document.querySelector(".btn-enviar")' },
     { tipo: 'tabla', filas: [
-        ['Concepto', 'Descripción'],
-        ['Pura', 'Sin efectos secundarios']
+        ['Método', 'Qué devuelve'],
+        ['querySelector', 'El primer elemento que coincide']
     ]}
   ]
 }
 ```
 
-Tipos de contenido disponibles: `texto`, `subtitulo`, `codigo`, `tabla`. Dentro de `texto`, `subtitulo` y celdas de tabla puedes usar `**negritas**` y `` `código en línea` ``.
+Tipos de contenido disponibles: `texto`, `subtitulo`, `codigo`, `tabla`, `nota`. Dentro de `texto`, `subtitulo` y celdas de tabla puedes usar `**negritas**` y `` `código en línea` ``.
+
+El tipo `nota` es para cajas de tip o advertencia — se escribe como `{ tipo: 'nota', texto: '**⚠️ Título de la nota** El cuerpo del texto va después.' }`. Si el título incluye ⚠️ se pinta en rojo (advertencia); cualquier otro emoji o texto se pinta en ámbar (tip).
 
 ### 3. (Opcional) Dale un color al bloque
 

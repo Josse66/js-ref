@@ -313,6 +313,22 @@ body {
 .ref-table tr:hover td { background: rgba(255,255,255,.014); }
 .ref-table code { font-family: var(--f-mono); color: var(--amber); font-size: .92em; }
 
+/* Callouts — cajas de tip / advertencia */
+.callout {
+  margin: 14px 0; padding: 13px 16px; border-radius: var(--r-sm);
+  border: 1px solid; border-left-width: 3px;
+}
+.callout-warn { background: rgba(224,108,117,.07); border-color: rgba(224,108,117,.3); border-left-color: var(--c-debug); }
+.callout-tip  { background: var(--amber-glow); border-color: rgba(232,176,75,.3); border-left-color: var(--amber); }
+.callout-title {
+  font-family: var(--f-display); font-weight: 600; font-size: 13px;
+  margin-bottom: 4px; display: flex; align-items: center; gap: 6px;
+}
+.callout-warn .callout-title { color: #f0a8ae; }
+.callout-tip .callout-title { color: var(--amber); }
+.callout-body { font-size: 13.5px; color: var(--tx-dim); line-height: 1.55; }
+.callout-body code { font-family: var(--f-mono); font-size: .9em; background: var(--bg-inset); color: var(--tx); padding: 1px 5px; border-radius: 4px; }
+
 /* Mensaje vacío / búsqueda sin contexto */
 .empty-state { text-align: center; padding: 80px 20px; color: var(--tx-faint); }
 .empty-state svg { opacity: .4; margin-bottom: 16px; }
