@@ -123,6 +123,17 @@ function bloqueContenidoHTML(c, blockId) {
       const tb = body.map(r => '<tr>' + r.map(cell => `<td>${inlineMd(cell)}</td>`).join('') + '</tr>').join('');
       return `<table class="ref-table"><thead><tr>${th}</tr></thead><tbody>${tb}</tbody></table>`;
     }
+    case 'nota': {
+      // Formato esperado: **⚠️ Titulo** resto del texto
+      const m = c.texto.match(/^\*\*(.+?)\*\*\s*(.*)$/s);
+      const titulo = m ? m[1] : 'Nota';
+      const cuerpo = m ? m[2] : c.texto;
+      const esWarning = /⚠️/.test(titulo);
+      return `<div class="callout ${esWarning ? 'callout-warn' : 'callout-tip'}">
+        <div class="callout-title">${escapeHtml(titulo)}</div>
+        <div class="callout-body">${inlineMd(cuerpo)}</div>
+      </div>`;
+    }
     default: return '';
   }
 }
@@ -241,7 +252,7 @@ function observarSecciones() {
 const INDICE = SECCIONES.map(s => {
   const partes = [s.titulo];
   s.contenido.forEach(c => {
-    if (c.tipo === 'texto' || c.tipo === 'subtitulo') partes.push(c.texto);
+    if (c.tipo === 'texto' || c.tipo === 'subtitulo' || c.tipo === 'nota') partes.push(c.texto);
     if (c.tipo === 'codigo') partes.push(c.codigo);
     if (c.tipo === 'tabla') c.filas.forEach(r => partes.push(r.join(' ')));
   });
@@ -326,7 +337,7 @@ function buscar(query) {
     const origBlob = (() => {
       const parts = [s.titulo];
       s.contenido.forEach(c => {
-        if (c.tipo === 'texto' || c.tipo === 'subtitulo') parts.push(c.texto);
+        if (c.tipo === 'texto' || c.tipo === 'subtitulo' || c.tipo === 'nota') parts.push(c.texto);
         if (c.tipo === 'codigo') parts.push(c.codigo);
         if (c.tipo === 'tabla') c.filas.forEach(r => parts.push(r.join(' ')));
       });
@@ -453,16 +464,34 @@ function renderBotMd(md) {
   return h;
 }
 
+// Índice compacto de TODO el curso (solo números y títulos, agrupados por bloque)
+// Se calcula una sola vez y se le manda a Gemini junto con el detalle de la sección actual,
+// para que sepa que existen las otras 85 secciones aunque no vea su contenido completo.
+const INDICE_CURSO = (() => {
+  let txt = 'ÍNDICE DEL CURSO — todas las secciones que existen en los apuntes del estudiante (esto es solo un mapa, no el contenido completo de cada una):\n';
+  BLOQUES.forEach(b => {
+    const secs = seccionesDe(b.id);
+    const lista = secs.map(s => `${s.numero}. ${s.titulo}`).join(', ');
+    txt += `\n${b.titulo.toUpperCase()} (${b.rango[0]}-${b.rango[1]}): ${lista}`;
+  });
+  return txt;
+})();
+
 function construirContexto() {
+  let txt = INDICE_CURSO + '\n\n';
+
   if (!seccionActual) {
-    return `El usuario está viendo el bloque "${BLK_BY_ID[estadoBloque].titulo}" de sus apuntes de JavaScript de freeCodeCamp.`;
+    txt += `El usuario está viendo el bloque "${BLK_BY_ID[estadoBloque].titulo}" de sus apuntes, sin una sección específica en foco.`;
+    return txt;
   }
+
   const s = seccionActual;
-  let txt = `CONTEXTO — el usuario está leyendo esta sección de sus apuntes de JavaScript (freeCodeCamp):\n\n`;
+  txt += `SECCIÓN ACTUAL — el usuario está leyendo esto en este momento (usa este detalle solo como apoyo, no como límite de lo que puedes contestar):\n\n`;
   txt += `Sección ${s.numero}: ${s.titulo}\n`;
   s.contenido.forEach(c => {
     if (c.tipo === 'texto') txt += '\n' + c.texto.replace(/\*\*/g, '');
     if (c.tipo === 'subtitulo') txt += `\n## ${c.texto.replace(/\*\*/g, '')}`;
+    if (c.tipo === 'nota') txt += '\n[Nota: ' + c.texto.replace(/\*\*/g, '') + ']';
     if (c.tipo === 'codigo') txt += '\n```javascript\n' + c.codigo + '\n```';
     if (c.tipo === 'tabla') txt += '\n' + c.filas.map(r => r.join(' | ').replace(/\*\*/g, '')).join('\n');
   });
@@ -577,6 +606,14 @@ document.addEventListener('keydown', e => {
    ARRANQUE
    ─────────────────────────────────────────────── */
 function init() {
+  // Contadores dinamicos - se actualizan solos si se agregan bloques/secciones nuevas
+  const elSearchLabel = document.getElementById('searchTriggerLabel');
+  const elRailNote = document.getElementById('railNote');
+  const elProgress = document.getElementById('progressLabel');
+  if (elSearchLabel) elSearchLabel.textContent = `Buscar en ${SECCIONES.length} secciones…`;
+  if (elRailNote) elRailNote.textContent = `${BLOQUES.length} bloques · desde febrero 2026`;
+  if (elProgress) elProgress.textContent = `${SECCIONES.length} secciones documentadas`;
+
   renderSyllabus();
 
   // Resolver hash inicial (#bloque o #sec-N)

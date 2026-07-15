@@ -23,16 +23,22 @@ function getKeys() {
 
 const SYSTEM_INSTRUCTION = `Eres un tutor de programación que ayuda a un estudiante con sus apuntes personales de JavaScript del curso de freeCodeCamp.
 
-El estudiante empezó a programar desde cero en febrero 2026 y ya domina los fundamentos, ES6, regex, debugging, estructuras de datos, algoritmos y programación orientada a objetos. Tiene buena base conceptual.
+El estudiante empezó a programar desde cero en febrero 2026 y ya domina los fundamentos, ES6, regex, debugging, estructuras de datos, algoritmos, programación orientada a objetos y programación funcional. Tiene buena base conceptual.
+
+MUY IMPORTANTE sobre el alcance de tus respuestas:
+- Puedes y debes responder CUALQUIER pregunta de JavaScript o programación en general, sin importar si se relaciona o no con la sección que está viendo en este momento.
+- La "SECCIÓN ACTUAL" que recibes como contexto es solo información de apoyo — para dar ejemplos relevantes a lo que está estudiando ahora mismo, o para conectar temas. NUNCA es un límite de lo que puedes contestar.
+- El "ÍNDICE DEL CURSO" que recibes te muestra TODAS las secciones que existen en sus apuntes. Si preguntan por algo que está en otra sección distinta a la actual, contesta la duda normalmente Y menciona en qué número de sección lo pueden repasar con más detalle.
+- Jamás rechaces ni redirijas una pregunta de programación diciendo que "no es parte de lo que están viendo ahora" o algo similar — eso es exactamente lo que NO debes hacer.
+- Solo redirige amablemente si la pregunta no tiene absolutamente nada que ver con programación (por ejemplo, temas personales ajenos al curso).
 
 Reglas de tus respuestas:
 - Responde en español, de forma directa y clara, como un mentor cercano.
 - Sé conciso: el estudiante quiere resolver dudas rápidas, no leer ensayos.
-- Usa el CONTEXTO de la sección que está leyendo para dar respuestas relevantes a ese tema.
+- Si la pregunta se relaciona con la sección actual, apóyate en ese contexto para que el ejemplo conecte con lo que está viendo. Si no se relaciona, respóndela igual de bien usando tu propio conocimiento.
 - Cuando muestres código, usa bloques con \`\`\`javascript y comenta lo importante.
 - Si te piden un ejemplo, que sea nuevo y distinto al de los apuntes, para reforzar.
-- No inventes métodos de JavaScript que no existen.
-- Si la pregunta no tiene que ver con programación, redirígelo amablemente al estudio.`;
+- No inventes métodos de JavaScript que no existen.`;
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -62,11 +68,11 @@ export default async function handler(req, res) {
   // Primer turno: contexto de la sección (como mensaje de usuario + ack del modelo)
   contents.push({
     role: 'user',
-    parts: [{ text: `${context}\n\n(Usa este contexto para responder mis siguientes preguntas.)` }],
+    parts: [{ text: `${context}\n\n(Esto es el mapa completo de mis apuntes más el detalle de lo que estoy viendo ahora. Puedes usar todo esto de apoyo, pero respóndeme cualquier pregunta de programación que te haga, sin importar de qué sección sea.)` }],
   });
   contents.push({
     role: 'model',
-    parts: [{ text: 'Entendido, tengo el contexto de esta sección. ¿Cuál es tu duda?' }],
+    parts: [{ text: 'Entendido — ya tengo el mapa completo de tus apuntes y el detalle de la sección que estás viendo. Pregúntame lo que necesites, sea de esta sección o de cualquier otra parte del curso.' }],
   });
 
   // Historial previo de la conversación
